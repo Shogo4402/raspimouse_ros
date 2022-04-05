@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import rospy
 import actionlib
 from std_msgs.msg import UInt16
@@ -7,7 +7,8 @@ from raspimouse_ros.msg import MusicAction, MusicResult, MusicFeedback
 def put_freq(hz):
     try:
         with open('/dev/rtbuzzer0','w') as f:
-            print >> f, hz 
+            f.write(str(hz))
+            f.close()
     except:
         rospy.logerr("cannot open " + devfile)
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys, time
 import rospy
@@ -13,8 +13,8 @@ def switch_motors(onoff):
         p = rospy.ServiceProxy('/switch_motors', SwitchMotors)
         res = p(onoff)
         return res.accepted
-    except rospy.ServiceException, e:
-        print "Service call failed: %s"%e
+    except rospy.ServiceException as e:
+        print ("Service call failed: %s"%e)
     else:
         return False
 
@@ -35,10 +35,10 @@ def buzzer(hz):
         pub.publish(hz)
 
 def lightsensor_callback(data):
-    print "lightsensors:", data.left_forward, data.left_side, data.right_side, data.right_forward
+    print("lightsensors:", data.left_forward, data.left_side, data.right_side, data.right_forward)
 
 def switch_callback(data):
-    print "switches:",data.front, data.center, data.rear
+    print ("switches:",data.front, data.center, data.rear)
 
 def sensors():
     subls = rospy.Subscriber('/lightsensors', LightSensorValues, lightsensor_callback)
@@ -51,22 +51,24 @@ def pos_control(left_hz,right_hz,time_ms):
         p = rospy.ServiceProxy('/put_motor_freqs', PutMotorFreqs)
         res = p(left_hz,right_hz,time_ms)
         return res.accepted
-    except rospy.ServiceException, e:
-        print "Service call failed: %s"%e
+    except rospy.ServiceException as e:
+        print("Service call failed: %s"%e)
     else:
         return False
 
 if __name__ == "__main__":
     ### buzzer test ###
-    print >> sys.stderr, "test of the buzzer"
+    ###print >> sys.stderr, "test of the buzzer"
+    print("test of the buzzer",sys.stderr)
     buzzer(1000)
     time.sleep(2.0)
     buzzer(0)
 
     ### motor_raw test ###
-    print >> sys.stderr, "test of raw control of the motors"
+    ###print >> sys.stderr, "test of raw control of the motors"
+    print("test of raw control of the motors",sys.stderr)
     if not switch_motors(True):
-        print "[check failed]: motors are not empowered"
+        print("[check failed]: motors are not empowered")
 
     raw_control(0,0)
     time.sleep(0.5)
@@ -79,15 +81,17 @@ if __name__ == "__main__":
     raw_control(0,0)
 
     ### motor_pos test ###
-    print >> sys.stderr, "test of position control of the motors"
+    ###print >> sys.stderr, "test of position control of the motors"
+    print("test of position control of the motors",sys.stderr)
     pos_control(300,300,1000)
     pos_control(-300,-300,1000)
 
     if not switch_motors(False):
-        print "[check failed]: motors are not turned off"
+        print("[check failed]: motors are not turned off")
 
     ### lightsensor test ###
-    print >> sys.stderr, "test of sensors"
+    ###print >> sys.stderr, "test of sensors"
+    print("test of sensors",sys.stderr)
     sensors()
     time.sleep(10.0)
 

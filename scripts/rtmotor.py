@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import sys,math
 import rospy
 from raspimouse_ros.srv import PutMotorFreqs
@@ -12,8 +12,8 @@ def callback_motor_sw(message):
 
     try: 
         with open(enfile,'w') as f:
-            if message.on: print >> f, '1'
-            else:          print >> f, '0'
+            if message.on: f.write(str(1))
+            else:          f.write(str(0))
     except:
         rospy.logerr("cannot write to " + enfile)
         return False
@@ -27,8 +27,8 @@ def callback_motor_raw(message):
     try:
         lf = open(lfile,'w')
         rf = open(rfile,'w')
-        print >> lf, str(message.left)
-        print >> rf, str(message.right)
+        lf.write(str(message.left))
+        rf.write(str(message.right))
     except:
         rospy.logerr("cannot write to rtmotor_raw_*")
 
@@ -59,7 +59,7 @@ def callback_put_freqs(message):
 
     try:
         with open(devfile,'w') as f:
-            print >> f, "%s %s %s" % (message.left, message.right, message.duration)
+            f.write(str(message.left)+" "+str(message.right)+" "+ str(message.duration))
     except:
         rospy.logerr("cannot write to " + devfile)
         return False
